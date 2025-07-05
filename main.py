@@ -10,8 +10,16 @@ class Field:
 class Name(Field):
   pass
 
+class PhoneSizeException(Exception):
+  def __init__(self, message = 'Phone number should be 10 digits!'):
+    super().__init__(message)
+
 class Phone(Field):
-  pass
+  def __init__(self, value):
+    if len(value) != 10:
+      raise PhoneSizeException
+    else:
+      self.value = value
 
 class Record():
   def __init__(self, name):
@@ -23,6 +31,12 @@ class Record():
 
   def add_phone(self, new_phone):
     self.phones.append(Phone(new_phone))
+
+  def remove_phone(self, phone):
+    phone_to_remove = self.find_phone(phone)
+
+    if phone_to_remove:
+      self.phones.remove(phone_to_remove)
   
   def edit_phone(self, phone, new_phone):
     found_phone = self.find_phone(phone)
@@ -79,6 +93,9 @@ print(john)  # Виведення: Contact name: John, phones: 1112223333; 55555
 # Пошук конкретного телефону у записі John
 found_phone = john.find_phone("5555555555")
 print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
+john.add_phone('1111111111')
+john.remove_phone('5555555555')
+print(john)
 
 # Видалення запису Jane
 book.delete("Jane")
